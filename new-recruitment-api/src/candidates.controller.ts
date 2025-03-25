@@ -61,7 +61,7 @@ export class CandidatesController {
         "SELECT * FROM JobOffer ORDER BY RANDOM() LIMIT 1"
       );
       await dataBase.run(
-        `INSERT INTO candidates (firstName, lastName, email, phone, experience, notes, status, consentDate,createdAt, jobOffers) 
+        `INSERT INTO Candidate (firstName, lastName, email, phone, experience, notes, status, consentDate,createdAt, jobOffers) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           firstName,
