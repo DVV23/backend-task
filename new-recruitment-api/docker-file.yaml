@@ -1,0 +1,9 @@
+version: "3"
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - LEGACY_API_KEY='0194ec39-4437-7c7f-b720-7cd7b2c8d7f4'
