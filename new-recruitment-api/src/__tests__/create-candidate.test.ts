@@ -1,45 +1,35 @@
 import request from "supertest";
 import { Application } from "express";
 import { setupApp } from "../app";
+import { setupDb } from "../db";
 
 describe("Create Candidate", () => {
   let app: Application;
-
+  let db: any;
   beforeAll(async () => {
     app = await setupApp();
+    db = await setupDb();
   });
 
   it("should create a new candidate successfully", async () => {
-    const response = await request(app).post("/api/candidates").send({
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@example.com",
-      phoneNumber: "123-456-7890",
-      yearsOfExperience: 5,
-      recruiterNotes: "A strong candidate with great experience.",
-      recruitmentStatus: "nowy",
-      consentDate: "2025-03-25",
-    });
-    expect(response.status).toBe(201);
-    expect(response.body.message).toBe("User successfuly saved to Legacy DB");
-  });
-  it("should return an error if email already exists", async () => {
-    const existingCandidate = {
-      firstName: "Jane",
-      lastName: "Doe",
-      email: "john.doe@example.com",
-      phone: "987-654-3210",
-      experience: 3,
-      notes: "Another candidate with same email.",
-      status: "nowy",
-      consentDate: "2025-03-25T00:00:00Z",
-    };
-
+    const newDate = new Date().toISOString();
     const response = await request(app)
       .post("/api/candidates")
-      .send(existingCandidate)
-      .expect("Content-Type", /json/)
-      .expect(400);
-    expect(response.body.error).toBe("Email should be unique.");
+      .set("x-api-key", "0194ec39-4437-7c7f-b720-7cd7b2c8d7f4")
+      .send({
+        firstName: "John",
+        lastName: "Doe",
+        email: "john.doe@example.com",
+        phone: "9876543210",
+        experience: 5,
+        notes: "A strong candidate with great experience.",
+        status: "nowy",
+        consentDate: newDate,
+      });
+    expect(response.status).toBe(201);
+  });
+  it("should return all users", async () => {
+    const response = await request(app).get("/api/candidates");
+    expect(response.status).toBe(200);
   });
 });

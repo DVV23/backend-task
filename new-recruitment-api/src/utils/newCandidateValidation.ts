@@ -12,5 +12,5 @@ export const newCandidateSchema = Joi.object({
   status: Joi.string()
     .valid("nowy", "w trakcie rozmów", "zaakceptowany", "odrzucony")
     .default("nowy"),
-  consentDate: Joi.date().iso().required(),
+  consentDate: Joi.date().iso(),
 });

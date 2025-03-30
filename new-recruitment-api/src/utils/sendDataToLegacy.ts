@@ -1,3 +1,5 @@
+import { Request, Response } from "express";
+
 export type TCandidateData = {
   firstName: string;
   lastName: string;
@@ -8,12 +10,16 @@ export type TCandidateData = {
   status: StatusType;
   consentDate: Date;
   createdAt: string;
-  randomJobOffer: string | string[];
+  jobOfferIdentificator: string | string[];
 };
 
 type StatusType = "nowy" | "w trakcie rozmów" | "zaakceptowany" | "odrzucony";
 
-export const createCandidate = async (candidateData: TCandidateData) => {
+export const createCandidate = async (
+  candidateData: TCandidateData,
+  req: Request,
+  res: Response
+) => {
   const {
     firstName,
     lastName,
@@ -24,7 +30,7 @@ export const createCandidate = async (candidateData: TCandidateData) => {
     status,
     consentDate,
     createdAt,
-    randomJobOffer,
+    jobOfferIdentificator,
   } = candidateData;
 
   try {
@@ -44,17 +50,19 @@ export const createCandidate = async (candidateData: TCandidateData) => {
         status,
         consentDate,
         createdAt,
-        randomJobOffer,
+        jobOfferIdentificator,
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      return res.status(400).json({ error: "Email should be unique" });
     }
 
     const data = await response.json();
-    return data;
+    if (data) {
+      return res.status(201).json({ message: data });
+    }
   } catch (error) {
-    console.error("Error while creating a candidate:", error);
+    return res.status(500).json({ error: "Error while creating a candidate:" });
   }
 };

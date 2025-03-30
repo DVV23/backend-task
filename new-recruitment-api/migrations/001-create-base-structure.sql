@@ -27,5 +27,6 @@ CREATE TABLE Candidate (
     recruitmentStatus TEXT CHECK(recruitmentStatus IN ('nowy', 'w trakcie rozmów', 'zaakceptowany', 'odrzucony')),
     consentDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    jobOffers TEXT
+    jobOffer INTEGER,
+    FOREIGN KEY (jobOffer) REFERENCES JobOffer(id) ON DELETE SET NULL
 );
